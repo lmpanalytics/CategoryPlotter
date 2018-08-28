@@ -105,3 +105,8 @@ venv.bak/
 
 # vscode stuff
 .vscode/settings.json
+
+# misc
+*.png
+*.csv
+

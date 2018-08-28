@@ -1,0 +1,6 @@
+1. Extract data from here:
+C:\Users\SEPALMM\Documents\06_Nestle\TS_Sales_Nestle\TS Special Ledger Nestle by Cluster, Market, and Category.xlsx
+
+2. Update 'periods' in method 'createDateRange()' in file 'PlotMain.py' to match ending date in above data file
+
+3. Run file 'PlotMain.py'
