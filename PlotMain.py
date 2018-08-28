@@ -13,6 +13,7 @@ import pandas as pd
 # Extract data from here:
 # C:\Users\SEPALMM\Documents\06_Nestle\TS_Sales_Nestle\TS Special Ledger Nestle by Cluster, Market, and Category.xlsx
 # Update 'periods' in method 'createDateRange()' in file 'PlotMain.py' to match ending date in above data file
+# Run prgm. (Execution time (sec):  60)
 # ****************** PROCEDURE END ******************
 
 
@@ -80,26 +81,29 @@ def groupSalesByDates():
 def sumTotalSalesBydates(df_R12SalesByDates):
     """ Sum total category sales and growth rates by dates
     """
+
+    # Calculate row sums, divide by 1 million to get MEUR,
+    # replace zero values by NaN to prevent plotting from zero levels
     df_R12SalesByDates['sumTotal'] = df_R12SalesByDates.sum(
-        axis=1).replace(0, np.nan)
+        axis=1).replace(0, np.nan)/1000000
 
     # Drop not needed columns
     df_R12SalesByDates = df_R12SalesByDates.drop(
         df_R12SalesByDates.columns[[0, 1, 2, 3, 4, 5, 6, 7]], axis=1)
 
     # Calculate R12 growth rate.
-    # Number of rows is one less than total, else out-of-index error
-    rows = df_R12SalesByDates.shape[0]-1
+    # Number of rows is twelve less than total, else out-of-index error
+    rows = df_R12SalesByDates.shape[0]-12
     # Create a list to store the data
     growthRates = []
-    # Add manually the first entry, else dataframe merge will not match on length
-    growthRates.append(np.nan)
+    # Add manually the 12 first entries, else dataframe merge will not match on length
+    growthRates += 12 * [np.nan]
     # Populate list
     for i in range(rows):
         # Handle div by 0
-        if df_R12SalesByDates.iloc[i + 1]['sumTotal'] != 0:
+        if df_R12SalesByDates.iloc[i]['sumTotal'] != 0:
             growthRates.append(
-                ((df_R12SalesByDates.iloc[i]['sumTotal'] / df_R12SalesByDates.iloc[i + 1]['sumTotal'])-1)*100)
+                ((df_R12SalesByDates.iloc[i+12]['sumTotal'] / df_R12SalesByDates.iloc[i]['sumTotal'])-1)*100)
         else:
             growthRates.append(np.nan)
 
@@ -185,7 +189,7 @@ df_total = sumTotalSalesBydates(df1)
 # print(df_total)
 ax_total = df_total.plot(subplots=True, layout=(1, 2), figsize=(12, 6),
                          sharex=False, title='Rolling 12 Net Sales\nTotal and Growth rate')
-ax_total[0][0].set_ylabel('EUR')
+ax_total[0][0].set_ylabel('MEUR')
 ax_total[0][1].set_ylabel('%')
 
 print('Saving: Rolling 12 Net Sales, Total and Growth rate.png')
