@@ -60,7 +60,7 @@ def fixMissingDates(df_grouped):
 def createDateRange():
     """ Calculates from a start date and adds a number of monthly periods to arrive at an end date
     """
-    return pd.date_range('2014-01-31', periods=55, freq='M')
+    return pd.date_range('2014-01-31', periods=56, freq='M')
 
 
 def groupSalesByDates():
@@ -183,6 +183,14 @@ print('Saving: Rolling 12 Net Sales by Category.png')
 plt.savefig('SalesPlots/02.Rolling 12 Net Sales by Category.png')
 plt.close()
 
+# Plot df1 as categories stacked in one picture
+ax1_stacked = df1.plot.area(figsize=(12, 12),
+               sharex=False, title='Rolling 12 Net Sales Stacked by Category')
+ax1_stacked.set_ylabel('EUR')
+
+print('Saving: Rolling 12 Net Sales Stacked by Category.png')
+plt.savefig('SalesPlots/08.Rolling 12 Net Sales Stacked by Category.png')
+plt.close()
 
 # Create plot and save as picture of total sales by date
 df_total = sumTotalSalesBydates(df1)
